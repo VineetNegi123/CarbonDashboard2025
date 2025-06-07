@@ -1,0 +1,5 @@
+streamlit
+plotly
+pandas
+fpdf
+kaleido  # Optional, for exporting charts as PNG
