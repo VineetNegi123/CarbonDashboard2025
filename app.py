@@ -130,35 +130,6 @@ with metrics_col:
     """, unsafe_allow_html=True)
 
 with chart_col:
-    st.subheader("📉 Energy Comparison (Before vs After Optimization)")
-    fig = go.Figure()
-    fig.add_trace(go.Bar(
-        x=["Before Optimization"],
-        y=[total_energy_before],
-        name='Before (kWh)',
-        marker_color='lightgray',
-        text=[f"{total_energy_before:,.0f}"],
-        textposition="outside"
-    ))
-    fig.add_trace(go.Bar(
-        x=["After Optimization"],
-        y=[energy_after],
-        name='After (kWh)',
-        marker_color='green',
-        text=[f"{energy_after:,.0f}"],
-        textposition="outside"
-    ))
-    fig.update_layout(
-        height=420,
-        xaxis=dict(showgrid=False),
-        yaxis=dict(title='Energy Consumption (kWh)', showgrid=True),
-        barmode='group',
-        plot_bgcolor='white',
-        showlegend=True,
-        margin=dict(l=20, r=20, t=30, b=30)
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
     st.subheader(f"💰 {years}-Year ROI Forecast")
     fig2 = go.Figure()
     fig2.add_trace(go.Bar(x=list(range(years)), y=[annual_savings]*years, name="Annual Savings", marker_color="#10B981"))
