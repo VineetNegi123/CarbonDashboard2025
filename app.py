@@ -60,8 +60,8 @@ country_factors = {
 # Currency selection
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
-selected_currency = st.sidebar.selectbox("Select Currency", options=list(currency_options.keys()), index=0)
-currency_symbol = currency_options[selected_currency]
+selected_currency = st.sidebar.selectbox("Select Currency", options=list(currency_options.keys()), index=1)
+currency_symbol = f"$ {selected_currency}"
 
 # Input Section
 st.header("🔧 Input Parameters")
@@ -92,7 +92,9 @@ annual_co2_reduction = energy_savings * carbon_emission_factor
 # ROI Calculations
 initial_investment = st.number_input(f"One Time Onboarding Investment ({currency_symbol})", value=16000.0)
 software_fee = st.number_input(f"Annual Recurring Software Investment ({currency_symbol})", value=72817.0)
-years = st.slider("Select ROI Duration (Years)", min_value=3, max_value=10, value=5)
+
+# ROI Duration (Only 3 or 5 years)
+years = st.selectbox("Select ROI Duration", options=[3, 5])
 annual_savings = energy_savings * electricity_rate
 cumulative_savings = []
 net_cash_flow = []
@@ -124,7 +126,7 @@ with metrics_col:
     <br>
     <div class=\"metric-box\">{int(payback_months):02d}<div class=\"metric-label\">Months<br>Payback Period</div></div>
     <br>
-    <div class=\"metric-box\">{net_income_k}k<div class=\"metric-label\">{selected_currency}<br>Net Income ({years}yrs)</div></div>
+    <div class=\"metric-box\">{net_income_k}k<div class=\"metric-label\">{currency_symbol}<br>Net Income ({years}yrs)</div></div>
     """, unsafe_allow_html=True)
 
 with chart_col:
@@ -141,7 +143,7 @@ with chart_col:
     fig2.add_trace(go.Bar(x=list(range(years)), y=[annual_savings]*years, name="Annual Savings", marker_color="#10B981"))
     fig2.add_trace(go.Bar(x=list(range(years)), y=total_costs, name="Annual Costs", marker_color="#F87171"))
     fig2.add_trace(go.Scatter(x=list(range(years)), y=cumulative_savings, mode='lines+markers', name="Cumulative Net Savings", line=dict(color="#3B82F6")))
-    fig2.update_layout(barmode='group', height=400, xaxis_title='Year', yaxis_title=f'Cash Flow ({selected_currency})',
+    fig2.update_layout(barmode='group', height=400, xaxis_title='Year', yaxis_title=f'Cash Flow ({currency_symbol})',
                        plot_bgcolor='white', legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
     st.plotly_chart(fig2, use_container_width=True)
 
