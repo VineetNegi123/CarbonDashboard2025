@@ -102,77 +102,69 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# --- ROI CHART (Stacked with Payback Marker) ---
+# --- ROI Chart Section ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 years = list(range(roi_years))
-investment = [initial_investment + software_fee] + [software_fee] * (roi_years - 1)
-savings = [annual_savings] * roi_years
+annual_savings_list = [annual_savings] * roi_years
+investment_costs = [initial_investment + software_fee] + [software_fee] * (roi_years - 1)
 
-cumulative_net = []
+cumulative_savings = []
 net = 0
 for i in range(roi_years):
-    net += savings[i] - investment[i]
-    cumulative_net.append(net)
+    net += (annual_savings_list[i] - investment_costs[i])
+    cumulative_savings.append(net)
 
-payback_year = None
 if annual_savings > 0:
-    raw = (initial_investment + software_fee) / annual_savings
-    if raw <= roi_years:
-        payback_year = round(raw, 2)
+    payback_year = round((initial_investment + software_fee) / annual_savings, 2)
+else:
+    payback_year = None
 
 fig = go.Figure()
 
 fig.add_trace(go.Bar(
     x=years,
-    y=investment,
-    name="Investment",
-    marker_color="red",
-    text=[f"{currency_symbol} {int(v):,}" for v in investment],
-    textposition="auto"
+    y=annual_savings_list,
+    name="Annual Savings",
+    marker_color="green",
+    offsetgroup=0
 ))
 
 fig.add_trace(go.Bar(
     x=years,
-    y=savings,
-    name="Annual Savings",
-    marker_color="green",
-    text=[f"{currency_symbol} {int(v):,}" for v in savings],
-    textposition="auto"
+    y=investment_costs,
+    name="Investment",
+    marker_color="red",
+    offsetgroup=1
 ))
 
 fig.add_trace(go.Scatter(
     x=years,
-    y=cumulative_net,
+    y=cumulative_savings,
     mode="lines+markers+text",
     name="Cumulative Net Savings",
     line=dict(color="blue"),
-    text=[f"{currency_symbol} {int(v):,}" for v in cumulative_net],
+    text=[f"{currency_symbol} {int(y):,}" for y in cumulative_savings],
     textposition="top center"
 ))
 
-if payback_year is not None:
+if payback_year is not None and 0 <= payback_year <= roi_years:
     fig.add_vline(
         x=payback_year,
         line_dash="dash",
-        line_color="yellow"
-    )
-    fig.add_annotation(
-        x=payback_year,
-        y=0,
-        text=f"Payback: Year {payback_year}",
-        showarrow=False,
-        font=dict(color="yellow", size=12),
-        xanchor="center",
-        yanchor="top"
+        line_color="yellow",
+        annotation_text=f"Payback: Year {payback_year}",
+        annotation_position="top left",
+        annotation_font_size=12,
+        annotation_font_color="yellow"
     )
 
 fig.update_layout(
-    barmode='stack',
+    barmode='group',
     height=450,
-    xaxis_title="Year",
-    yaxis_title=f"Cash Flow ({currency_symbol})",
-    plot_bgcolor="white",
+    xaxis=dict(title='Year', range=[0, roi_years - 1]),
+    yaxis_title=f'Cash Flow ({currency_symbol})',
+    plot_bgcolor='white',
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     margin=dict(l=20, r=20, t=40, b=30)
 )
@@ -191,3 +183,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
