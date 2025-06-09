@@ -132,25 +132,29 @@ payback_year = compute_payback_year(net_flows)
 # Plotly figure
 fig = go.Figure()
 
-fig.add_trace(go.Bar(x=x_years, y=[-i for i in initials], name="Initial Investment", marker_color='lightgrey', text=[f"-{currency_symbol}{int(i):,}" if i else "" for i in initials], textposition="outside"))
-fig.add_trace(go.Bar(x=x_years, y=savings, name="Annual Savings", marker_color='green', text=[f"{currency_symbol}{int(i):,}" for i in savings], textposition="outside"))
-fig.add_trace(go.Bar(x=x_years, y=[-f for f in fees], name="SaaS Fee", marker_color='tomato', text=[f"-{currency_symbol}{int(i):,}" if i else "" for i in fees], textposition="outside"))
+fig.add_trace(go.Bar(x=x_years, y=[-i for i in initials], name="Initial Investment", marker_color='grey',
+                     text=[f"-{currency_symbol}{int(i):,}" if i else "" for i in initials], textposition="outside"))
+fig.add_trace(go.Bar(x=x_years, y=savings, name="Annual Savings", marker_color='green',
+                     text=[f"{currency_symbol}{int(i):,}" for i in savings], textposition="outside"))
+fig.add_trace(go.Bar(x=x_years, y=[-f for f in fees], name="SaaS Fee", marker_color='red',
+                     text=[f"-{currency_symbol}{int(i):,}" if i else "" for i in fees], textposition="outside"))
 fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", name="Cumulative Net Savings",
-                         line=dict(color='deepskyblue', width=3), text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
+                         line=dict(color='blue', width=3),
+                         text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
                          textposition="top center"))
 
 # Payback annotation
 if payback_year:
-    fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="yellow")
+    fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="orange")
     fig.add_annotation(x=payback_year, y=max(cumulative)*0.05, text=f"Payback: Year {payback_year:.2f}",
-                       showarrow=False, font=dict(color="yellow", size=14), bgcolor="black")
+                       showarrow=False, font=dict(color="orange", size=14), bgcolor="white")
 
 fig.update_layout(
     barmode="relative",
     height=500,
-    plot_bgcolor="black",
-    paper_bgcolor="black",
-    font=dict(color="white"),
+    plot_bgcolor="white",
+    paper_bgcolor="white",
+    font=dict(color="black"),
     xaxis=dict(title="Year", tickmode="linear", dtick=1),
     yaxis=dict(title=f"Cash Flow ({currency_symbol})"),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
@@ -169,3 +173,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
