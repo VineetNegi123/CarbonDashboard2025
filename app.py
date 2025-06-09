@@ -40,7 +40,7 @@ with col3:
 
 # --- Final Calculations ---
 carbon_reduction = energy_savings * carbon_emission_factor
-annual_savings = energy_savings * electricity_rate  # Reverted to original formula
+annual_savings = cooling_energy * electricity_rate * efficiency_pct
 total_investment = initial_investment + software_fee
 
 payback_text = (
