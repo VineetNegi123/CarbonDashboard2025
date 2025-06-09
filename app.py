@@ -30,7 +30,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     energy_savings = st.number_input("Estimated Energy Savings (kWh/year)", value=1040249.0)
     electricity_rate = st.number_input(f"Electricity Rate ({currency_symbol}/kWh)", value=0.14)
-    cooling_energy = st.number_input("Cooling Energy (RTh/year)", value=21900000)
+    cooling_energy = st.number_input("Cooling Energy (RTh/year)", value=21900000.00, format="%.2f")
 
 with col2:
     selected_country = st.selectbox("Select Country", list(country_factors.keys()))
@@ -48,7 +48,6 @@ carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 payback_text = f"{initial_investment / annual_savings:.2f} yrs" if annual_savings > 0 else "Not achievable"
 
-# --- Summary UI ---
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -102,7 +101,6 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# --- ROI CHART ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
@@ -140,7 +138,6 @@ fig.add_trace(go.Scatter(
     textposition="top center"
 ))
 
-# Dotted Payback line and label
 if payback_year:
     fig.add_vline(x=payback_year, line_width=2, line_dash="dot", line_color="yellow")
     fig.add_annotation(
@@ -170,7 +167,6 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# --- Notes ---
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
@@ -182,3 +178,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
