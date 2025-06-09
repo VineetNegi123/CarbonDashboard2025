@@ -124,7 +124,7 @@ fig.add_trace(go.Scatter(x=list(range(roi_years)), y=cumulative_savings,
 fig.update_layout(
     barmode='group',
     height=400,
-    xaxis_title='Year',
+    xaxis=dict(title='Year', range=[0, roi_years - 1]),  # ✅ start from 0 only
     yaxis_title=f'Cash Flow ({currency_symbol})',
     plot_bgcolor='white',
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
