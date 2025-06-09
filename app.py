@@ -102,29 +102,48 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# --- ROI Chart ---
+# --- ✅ Corrected ROI Forecast ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
-total_costs = [total_investment] + [software_fee] * (roi_years - 1)
+
+# Build cost and savings arrays
+annual_savings_list = [annual_savings] * roi_years
+investment_costs = [initial_investment + software_fee] + [software_fee] * (roi_years - 1)
+
+# Compute cumulative savings and net cash
 cumulative_savings = []
 net_cash_flow = []
 
 for i in range(roi_years):
-    net = annual_savings - total_costs[i]
+    net = annual_savings_list[i] - investment_costs[i]
     net_cash_flow.append(net if i == 0 else net_cash_flow[-1] + net)
     cumulative_savings.append(net_cash_flow[-1])
 
+# Create the chart
 fig = go.Figure()
-fig.add_trace(go.Bar(x=list(range(roi_years)), y=[annual_savings]*roi_years,
-                     name="Annual Savings", marker_color="green"))
-fig.add_trace(go.Bar(x=list(range(roi_years)), y=total_costs,
-                     name="Investment", marker_color="red"))
-fig.add_trace(go.Scatter(x=list(range(roi_years)), y=cumulative_savings,
-                         mode="lines+markers", name="Cumulative Net Savings", line=dict(color="blue")))
+fig.add_trace(go.Bar(
+    x=list(range(roi_years)),
+    y=annual_savings_list,
+    name="Annual Savings",
+    marker_color="green"
+))
+fig.add_trace(go.Bar(
+    x=list(range(roi_years)),
+    y=investment_costs,
+    name="Investment",
+    marker_color="red"
+))
+fig.add_trace(go.Scatter(
+    x=list(range(roi_years)),
+    y=cumulative_savings,
+    mode="lines+markers",
+    name="Cumulative Net Savings",
+    line=dict(color="blue")
+))
 
 fig.update_layout(
     barmode='group',
     height=400,
-    xaxis=dict(title='Year', range=[0, roi_years - 1]),  # ✅ start from 0 only
+    xaxis=dict(title='Year', range=[0, roi_years - 1]),  # No -0.5 offset
     yaxis_title=f'Cash Flow ({currency_symbol})',
     plot_bgcolor='white',
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
