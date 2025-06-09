@@ -49,58 +49,53 @@ payback_text = (
 )
 
 # --- Summary ---
-st.markdown("""
+st.markdown(f"""
 <h3>📊 Summary Metrics</h3>
 <style>
-.summary-metric {
+.summary-metric {{
     display: flex;
     justify-content: space-between;
     gap: 30px;
     margin-top: 10px;
     margin-bottom: 30px;
-}
-.summary-box {
+}}
+.summary-box {{
     background-color: #f9f9f9;
     padding: 14px 20px;
     border-radius: 10px;
     width: 100%;
     text-align: center;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-.summary-value {
+}}
+.summary-value {{
     font-size: 20px;
     font-weight: 600;
-}
-.summary-label {
+}}
+.summary-label {{
     font-size: 14px;
     color: #666;
     margin-top: 4px;
-}
+}}
 </style>
 <div class="summary-metric">
     <div class="summary-box">
-        <div class="summary-value">{0:.1f} tCO₂e/year</div>
+        <div class="summary-value">{carbon_reduction / 1000:.1f} tCO₂e/year</div>
         <div class="summary-label">Carbon Reduction</div>
     </div>
     <div class="summary-box">
-        <div class="summary-value">{1:,} kWh/year</div>
+        <div class="summary-value">{int(energy_savings):,} kWh/year</div>
         <div class="summary-label">Energy Savings</div>
     </div>
     <div class="summary-box">
-        <div class="summary-value">{2:.1f}%</div>
+        <div class="summary-value">{efficiency_pct * 100:.1f}%</div>
         <div class="summary-label">Efficiency Improvement</div>
     </div>
     <div class="summary-box">
-        <div class="summary-value">{3}</div>
+        <div class="summary-value">{payback_text}</div>
         <div class="summary-label">Payback Period</div>
     </div>
 </div>
-""".format(
-    carbon_reduction / 1000,
-    int(energy_savings),
-    efficiency_pct * 100,
-    payback_text
-), unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # --- ROI Chart Section ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
