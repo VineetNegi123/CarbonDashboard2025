@@ -145,7 +145,7 @@ fig.add_trace(go.Scatter(
     textposition="top center"
 ))
 
-# Payback vertical line & label
+# Payback vertical line & properly aligned annotation
 if payback_x is not None:
     fig.add_vline(x=payback_x, line_width=2, line_dash="dot", line_color="yellow")
     fig.add_annotation(
@@ -192,3 +192,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
