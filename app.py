@@ -79,19 +79,19 @@ st.markdown("""
 </style>
 <div class="summary-metric">
     <div class="summary-box">
-        <div class="summary-value">{:.1f} tCO₂e/year</div>
+        <div class="summary-value">{0:.1f} tCO₂e/year</div>
         <div class="summary-label">Carbon Reduction</div>
     </div>
     <div class="summary-box">
-        <div class="summary-value">{:,} kWh/year</div>
+        <div class="summary-value">{1:,} kWh/year</div>
         <div class="summary-label">Energy Savings</div>
     </div>
     <div class="summary-box">
-        <div class="summary-value">{:.1f}%</div>
+        <div class="summary-value">{2:.1f}%</div>
         <div class="summary-label">Efficiency Improvement</div>
     </div>
     <div class="summary-box">
-        <div class="summary-value">{}</div>
+        <div class="summary-value">{3}</div>
         <div class="summary-label">Payback Period</div>
     </div>
 </div>
