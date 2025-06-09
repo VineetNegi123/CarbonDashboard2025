@@ -145,18 +145,20 @@ fig.add_trace(go.Scatter(
     textposition="top center"
 ))
 
-# Payback vertical line & properly aligned annotation
+# Payback marker and label with arrow pointing to correct x position
 if payback_x is not None:
     fig.add_vline(x=payback_x, line_width=2, line_dash="dot", line_color="yellow")
     fig.add_annotation(
         x=payback_x,
-        y=max(cumulative) * 1.02,
+        y=max(cumulative) * 1.05,
         xref="x",
         yref="y",
+        ax=0,
+        ay=-40,
+        showarrow=True,
+        arrowhead=1,
         text=f"<b>Payback Period: {payback_x:.2f} yrs</b>",
-        showarrow=False,
         font=dict(color="black", size=14),
-        align="center",
         bgcolor="yellow",
         bordercolor="black",
         borderwidth=1
