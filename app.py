@@ -1,16 +1,16 @@
 import streamlit as st
 import plotly.graph_objects as go
 
-# Page config
+# Page setup
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
-# Currency selection
+# Sidebar currency selection
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
 currency_symbol = f"$ {selected_currency}"
 
-# Carbon emission factors by country (kg CO₂/kWh)
+# Country carbon factors
 country_factors = {
     "Indonesia": 0.87, "Singapore": 0.408, "Malaysia": 0.585, "Thailand": 0.513,
     "Vietnam": 0.618, "Philippines": 0.65, "China": 0.555, "Japan": 0.474,
@@ -18,7 +18,7 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-# Input Parameters
+# Input section
 st.header("🔧 Input Parameters")
 col1, col2, col3 = st.columns(3)
 
@@ -38,17 +38,17 @@ with col3:
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
     roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
-# Calculations
+# --- Calculations ---
 carbon_reduction = energy_savings * carbon_emission_factor
-improvement_savings = cooling_energy * electricity_rate * efficiency_pct
+annual_savings = cooling_energy * electricity_rate * efficiency_pct
 total_investment = initial_investment + software_fee
 
-payback_text = (
-    f"{total_investment / improvement_savings:.2f} yrs"
-    if improvement_savings > 0 else "Not achievable"
-)
+if annual_savings > 0:
+    payback_text = f"{total_investment / annual_savings:.2f} yrs"
+else:
+    payback_text = "Not achievable"
 
-# Custom Summary Metrics
+# --- Summary Metrics (clean display) ---
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -102,11 +102,9 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# ROI Chart
+# --- ROI Chart ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
-
 total_costs = [total_investment] + [software_fee] * (roi_years - 1)
-annual_savings = improvement_savings
 cumulative_savings = []
 net_cash_flow = []
 
@@ -135,7 +133,7 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# Notes section
+# --- Notes section ---
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
@@ -147,4 +145,3 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
-
