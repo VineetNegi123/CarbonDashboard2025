@@ -10,7 +10,7 @@ st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", options=list(currency_options.keys()), index=1)
 currency_symbol = f"$ {selected_currency}"
 
-# --- Country Carbon Factors (kg CO2/kWh) ---
+# --- Country Carbon Factors (kg CO₂/kWh) ---
 country_factors = {
     "Indonesia": 0.87, "Singapore": 0.408, "Malaysia": 0.585,
     "Thailand": 0.513, "Vietnam": 0.618, "Philippines": 0.65,
@@ -92,6 +92,15 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# --- Footer ---
+# --- Notes Section (Preserved) ---
 st.markdown("---")
-st.caption("Crafted by Univers AI • Internal Use Only • Powered by Streamlit")
+st.subheader("📝 Notes")
+st.markdown("""
+- Savings are indicative only and assume 12 months of clean interval energy + HVAC data; we will recalculate once verified data is available.
+- We assume your BMS offers read/write API access with documented point names and units; exact scope and timeline will be set after we review the point list.
+- Models use current schedules, set-points and occupancy; any major change (new tenants, longer hours, etc.) will shift both baseline and savings.
+- Cost and CO₂ figures use prevailing market values.
+- No new meters, controllers, network upgrades or cybersecurity work are included; any required additions will be separately scoped and priced after a joint site survey.
+""")
+
+st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
