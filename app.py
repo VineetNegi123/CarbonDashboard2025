@@ -10,16 +10,13 @@ def compute_payback_year(cashflows):
             return i - 1 + (-prev) / (cashflows[i])
     return None
 
-# Page setup
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
-# Currency selection
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
 currency_symbol = f"$ {selected_currency}"
 
-# Carbon factors
 country_factors = {
     "Indonesia": 0.87, "Singapore": 0.408, "Malaysia": 0.585, "Thailand": 0.513,
     "Vietnam": 0.618, "Philippines": 0.65, "China": 0.555, "Japan": 0.474,
@@ -27,7 +24,6 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-# Input UI
 st.header("🛠️ Input Parameters")
 col1, col2, col3 = st.columns(3)
 
@@ -48,7 +44,6 @@ with col3:
     one_time_install = st.number_input(f"One-Time Installation ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
 
-# Calculations
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 
@@ -57,7 +52,6 @@ payback_text = (
     if annual_savings > 0 else "Not achievable"
 )
 
-# Summary Metrics
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -111,7 +105,6 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# ROI CHART
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
@@ -155,14 +148,17 @@ fig.update_layout(
     paper_bgcolor="white",
     font=dict(color="black"),
     xaxis=dict(title="Year", tickmode="linear", dtick=1),
-    yaxis=dict(title=f"Cash Flow ({currency_symbol})"),
+    yaxis=dict(
+        title=f"Cash Flow ({currency_symbol})",
+        tickformat=",",  # Use comma separator
+        tickfont=dict(size=13, family="Arial", color="black")
+    ),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     margin=dict(l=20, r=20, t=30, b=30)
 )
 
 st.plotly_chart(fig, use_container_width=True)
 
-# NOTES (final format)
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
