@@ -44,14 +44,14 @@ with col2:
     efficiency_pct = st.number_input("Efficiency Improvement (%)", value=5.0, format="%.2f") / 100
 
 with col3:
-    initial_investment = st.number_input(f"Initial Investment ({currency_symbol})", value=16000.0)
+    one_time_install = st.number_input(f"One-Time Installation Cost ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
     roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
 # --- Calculations ---
+total_investment = one_time_install + software_fee
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
-total_investment = initial_investment + software_fee
 
 payback_text = (
     f"{total_investment / annual_savings:.2f} yrs"
@@ -116,7 +116,7 @@ st.markdown("""
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
-initials = [initial_investment] + [0]*(roi_years - 1)
+initials = [total_investment] + [0]*(roi_years - 1)
 fees = [0] + [software_fee] * (roi_years - 1)
 savings = [annual_savings] * roi_years
 net_flows = [s - f - i for s, f, i in zip(savings, fees, initials)]
@@ -129,25 +129,53 @@ for i in range(1, roi_years):
 # Payback year (interpolated)
 payback_year = compute_payback_year(net_flows)
 
-# Plotly figure
+# Plotly chart
 fig = go.Figure()
 
-fig.add_trace(go.Bar(x=x_years, y=[-i for i in initials], name="Initial Investment", marker_color='grey',
-                     text=[f"-{currency_symbol}{int(i):,}" if i else "" for i in initials], textposition="outside"))
-fig.add_trace(go.Bar(x=x_years, y=savings, name="Annual Savings", marker_color='green',
-                     text=[f"{currency_symbol}{int(i):,}" for i in savings], textposition="outside"))
-fig.add_trace(go.Bar(x=x_years, y=[-f for f in fees], name="SaaS Fee", marker_color='red',
-                     text=[f"-{currency_symbol}{int(i):,}" if i else "" for i in fees], textposition="outside"))
-fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", name="Cumulative Net Savings",
-                         line=dict(color='blue', width=3),
-                         text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
-                         textposition="top center"))
+fig.add_trace(go.Bar(
+    x=x_years,
+    y=[-v for v in initials],
+    name="Initial Investment",
+    marker_color="grey",
+    text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in initials],
+    textposition="outside"
+))
+fig.add_trace(go.Bar(
+    x=x_years,
+    y=savings,
+    name="Annual Savings",
+    marker_color="green",
+    text=[f"{currency_symbol}{int(v):,}" for v in savings],
+    textposition="outside"
+))
+fig.add_trace(go.Bar(
+    x=x_years,
+    y=[-v for v in fees],
+    name="SaaS Fee",
+    marker_color="red",
+    text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in fees],
+    textposition="outside"
+))
+fig.add_trace(go.Scatter(
+    x=x_years,
+    y=cumulative,
+    mode="lines+markers+text",
+    name="Cumulative Net Savings",
+    line=dict(color="blue", width=3),
+    text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
+    textposition="top center"
+))
 
-# Payback annotation
+# Add payback year line
 if payback_year:
     fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="orange")
-    fig.add_annotation(x=payback_year, y=max(cumulative)*0.05, text=f"Payback: Year {payback_year:.2f}",
-                       showarrow=False, font=dict(color="orange", size=14), bgcolor="white")
+    fig.add_annotation(
+        x=payback_year, y=max(cumulative) * 0.05,
+        text=f"Payback: Year {payback_year:.2f}",
+        showarrow=False,
+        font=dict(color="orange", size=14),
+        bgcolor="white"
+    )
 
 fig.update_layout(
     barmode="relative",
@@ -167,10 +195,9 @@ st.plotly_chart(fig, use_container_width=True)
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
-- Savings are indicative only and assume 12 months of clean interval energy + HVAC data.
-- Exact scope and SaaS fees will be finalized after API/BMS review.
-- No new hardware, meters or controls are included in this projection.
+- Assumes valid metered baseline with standard BMS read/write capability.
+- Forecast excludes additional network, meter, or control upgrade costs.
+- SaaS fees and savings calculated based on current cooling patterns and schedules.
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
-
