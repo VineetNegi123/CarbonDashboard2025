@@ -4,13 +4,13 @@ import plotly.graph_objects as go
 # Page setup
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
-# Sidebar currency selection
+# Currency selection
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
 currency_symbol = f"$ {selected_currency}"
 
-# Country carbon factors
+# Country carbon factors (kg CO₂/kWh)
 country_factors = {
     "Indonesia": 0.87, "Singapore": 0.408, "Malaysia": 0.585, "Thailand": 0.513,
     "Vietnam": 0.618, "Philippines": 0.65, "China": 0.555, "Japan": 0.474,
@@ -38,17 +38,17 @@ with col3:
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
     roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
-# --- Calculations ---
+# --- Final Payback Formula Using Fixed Energy Savings ---
 carbon_reduction = energy_savings * carbon_emission_factor
-annual_savings = cooling_energy * electricity_rate * efficiency_pct
+annual_savings = energy_savings * electricity_rate
 total_investment = initial_investment + software_fee
 
-if annual_savings > 0:
-    payback_text = f"{total_investment / annual_savings:.2f} yrs"
-else:
-    payback_text = "Not achievable"
+payback_text = (
+    f"{total_investment / annual_savings:.2f} yrs"
+    if annual_savings > 0 else "Not achievable"
+)
 
-# --- Summary Metrics (clean display) ---
+# --- Summary Metrics Display ---
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -133,7 +133,7 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# --- Notes section ---
+# --- Notes ---
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
