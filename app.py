@@ -132,11 +132,24 @@ fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", nam
                          text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
                          textposition="top center"))
 
+# ✅ Yellow dotted payback line with label
 if payback_year:
-    fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="yellow")
-    fig.add_annotation(x=payback_year, y=max(cumulative)*0.05,
-                       text=f"Payback: Year {payback_year:.2f}",
-                       showarrow=False, font=dict(color="yellow", size=14), bgcolor="black")
+    fig.add_vline(
+        x=payback_year,
+        line_width=2,
+        line_dash="dot",
+        line_color="yellow"
+    )
+    fig.add_annotation(
+        x=payback_year,
+        y=1.04,
+        xref="x",
+        yref="paper",
+        text=f"Payback: Year {payback_year:.2f}",
+        showarrow=False,
+        font=dict(color="yellow", size=14),
+        align="center"
+    )
 
 fig.update_layout(
     barmode="relative",
