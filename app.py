@@ -40,7 +40,7 @@ with col3:
 
 # --- Final Calculations ---
 carbon_reduction = energy_savings * carbon_emission_factor
-annual_savings = energy_savings * electricity_rate
+annual_savings = cooling_energy * electricity_rate * efficiency_pct
 total_investment = initial_investment + software_fee
 
 payback_text = (
@@ -119,18 +119,16 @@ fig = go.Figure()
 
 fig.add_trace(go.Bar(
     x=years,
-    y=annual_savings_list,
-    name="Annual Savings",
-    marker_color="green",
-    offsetgroup=0
+    y=investment_costs,
+    name="Investment",
+    marker_color="red"
 ))
 
 fig.add_trace(go.Bar(
     x=years,
-    y=investment_costs,
-    name="Investment",
-    marker_color="red",
-    offsetgroup=1
+    y=annual_savings_list,
+    name="Annual Savings",
+    marker_color="green"
 ))
 
 fig.add_trace(go.Scatter(
@@ -149,13 +147,13 @@ if payback_year is not None and 0 <= payback_year <= roi_years:
         line_dash="dash",
         line_color="yellow",
         annotation_text=f"Payback: Year {payback_year}",
-        annotation_position="top left",
+        annotation_position="bottom",
         annotation_font_size=12,
         annotation_font_color="yellow"
     )
 
 fig.update_layout(
-    barmode='group',
+    barmode='overlay',
     height=450,
     xaxis=dict(title='Year', range=[0, roi_years - 1]),
     yaxis_title=f'Cash Flow ({currency_symbol})',
