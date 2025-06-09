@@ -107,24 +107,25 @@ st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 total_costs = [total_investment] + [software_fee] * (roi_years - 1)
 cumulative_savings = []
 net_cash_flow = []
+x_years = list(range(roi_years))  # [0, 1, 2] or [0, 1, 2, 3, 4]
 
-for i in range(roi_years):
+for i in x_years:
     net = annual_savings - total_costs[i]
     net_cash_flow.append(net if i == 0 else net_cash_flow[-1] + net)
     cumulative_savings.append(net_cash_flow[-1])
 
 fig = go.Figure()
-fig.add_trace(go.Bar(x=list(range(roi_years)), y=[annual_savings]*roi_years,
+fig.add_trace(go.Bar(x=x_years, y=[annual_savings]*roi_years,
                      name="Annual Savings", marker_color="green"))
-fig.add_trace(go.Bar(x=list(range(roi_years)), y=total_costs,
+fig.add_trace(go.Bar(x=x_years, y=total_costs,
                      name="Investment", marker_color="red"))
-fig.add_trace(go.Scatter(x=list(range(roi_years)), y=cumulative_savings,
+fig.add_trace(go.Scatter(x=x_years, y=cumulative_savings,
                          mode="lines+markers", name="Cumulative Net Savings", line=dict(color="blue")))
 
 fig.update_layout(
     barmode='group',
     height=400,
-    xaxis=dict(title='Year', range=[0, roi_years - 1]),  # ✅ start from 0 only
+    xaxis=dict(title='Year', tickmode='linear', dtick=1, range=[0, roi_years - 1]),
     yaxis_title=f'Cash Flow ({currency_symbol})',
     plot_bgcolor='white',
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
