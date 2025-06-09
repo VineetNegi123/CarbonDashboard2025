@@ -12,6 +12,7 @@ def compute_payback_year(cashflows):
 
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
+# Currency and country setup
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
@@ -24,6 +25,7 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
+# Input UI
 st.header("🛠️ Input Parameters")
 col1, col2, col3 = st.columns(3)
 
@@ -44,14 +46,12 @@ with col3:
     one_time_install = st.number_input(f"One-Time Installation ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
 
+# Calculations
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
+payback_text = f"{initial_investment / annual_savings:.2f} yrs" if annual_savings > 0 else "Not achievable"
 
-payback_text = (
-    f"{initial_investment / annual_savings:.2f} yrs"
-    if annual_savings > 0 else "Not achievable"
-)
-
+# --- Summary UI ---
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -105,27 +105,30 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
+# --- ROI Chart Calculation ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
-initials = [initial_investment] + [0]*(roi_years - 1)
-fees = [0] + [software_fee] * (roi_years - 1)
-savings = [annual_savings] * roi_years
-net_flows = [s - f - i for s, f, i in zip(savings, fees, initials)]
 
+# Year-by-year bar logic
+initials = [initial_investment] + [0] * (roi_years - 1)
+savings = [0] + [annual_savings] * (roi_years - 1)
+fees = [0, 0] + [software_fee] * max(0, roi_years - 2)
+
+net_flows = [s - f - i for s, f, i in zip(savings, fees, initials)]
 cumulative = [net_flows[0]]
 for i in range(1, roi_years):
     cumulative.append(cumulative[-1] + net_flows[i])
-
 payback_year = compute_payback_year(net_flows)
 
+# Plotly chart
 fig = go.Figure()
 
 fig.add_trace(go.Bar(x=x_years, y=[-v for v in initials], name="Initial Investment",
                      marker_color="grey", text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in initials],
                      textposition="outside"))
 fig.add_trace(go.Bar(x=x_years, y=savings, name="Annual Savings",
-                     marker_color="green", text=[f"{currency_symbol}{int(v):,}" for v in savings],
+                     marker_color="green", text=[f"{currency_symbol}{int(v):,}" if v else "" for v in savings],
                      textposition="outside"))
 fig.add_trace(go.Bar(x=x_years, y=[-v for v in fees], name="SaaS Fee",
                      marker_color="red", text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in fees],
@@ -137,7 +140,7 @@ fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", nam
 
 if payback_year:
     fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="orange")
-    fig.add_annotation(x=payback_year, y=max(cumulative) * 0.05,
+    fig.add_annotation(x=payback_year, y=max(cumulative)*0.05,
                        text=f"Payback: Year {payback_year:.2f}",
                        showarrow=False, font=dict(color="orange", size=14), bgcolor="white")
 
@@ -150,7 +153,7 @@ fig.update_layout(
     xaxis=dict(title="Year", tickmode="linear", dtick=1),
     yaxis=dict(
         title=f"Cash Flow ({currency_symbol})",
-        tickformat=",",  # Use comma separator
+        tickformat=",",
         tickfont=dict(size=13, family="Arial", color="black")
     ),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
@@ -159,6 +162,7 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
+# --- Notes ---
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
@@ -170,3 +174,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
