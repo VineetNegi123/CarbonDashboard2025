@@ -53,34 +53,34 @@ if annual_savings > software_fee:
 else:
     payback_text = "Not achievable"
 
-# --- Custom Summary Metrics (One Line, No Text Cutoff) ---
+# --- Custom Summary Metrics ---
 st.markdown("""
     <h3>📊 Summary Metrics</h3>
     <style>
-    .summary-metric {
+    .summary-metric {{
         display: flex;
         justify-content: space-between;
         gap: 30px;
         margin-top: 10px;
         margin-bottom: 30px;
-    }
-    .summary-box {
+    }}
+    .summary-box {{
         background-color: #f9f9f9;
         padding: 14px 20px;
         border-radius: 10px;
         width: 100%;
         text-align: center;
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-    .summary-value {
+    }}
+    .summary-value {{
         font-size: 20px;
         font-weight: 600;
-    }
-    .summary-label {
+    }}
+    .summary-label {{
         font-size: 14px;
         color: #666;
         margin-top: 4px;
-    }
+    }}
     </style>
 
     <div class="summary-metric">
