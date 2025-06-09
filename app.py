@@ -12,7 +12,6 @@ def compute_payback_year(cashflows):
 
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
-# Sidebar settings
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
@@ -25,7 +24,6 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-# Input form
 st.header("🛠️ Input Parameters")
 col1, col2, col3 = st.columns(3)
 
@@ -46,13 +44,10 @@ with col3:
     one_time_install = st.number_input(f"One-Time Installation ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
 
-# Calculations
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
-payback_year = initial_investment / annual_savings if annual_savings > 0 else None
-payback_text = f"{payback_year:.2f} yrs" if payback_year else "Not achievable"
+payback_text = f"{initial_investment / annual_savings:.2f} yrs" if annual_savings > 0 else "Not achievable"
 
-# Summary section
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -106,7 +101,6 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# ROI Chart
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
@@ -118,9 +112,8 @@ net_flows = [s - f - i for s, f, i in zip(savings, fees, initials)]
 cumulative = [net_flows[0]]
 for i in range(1, roi_years):
     cumulative.append(cumulative[-1] + net_flows[i])
-payback_x = compute_payback_year(net_flows)
+payback_year = compute_payback_year(net_flows)
 
-# Plotly chart
 fig = go.Figure()
 
 fig.add_trace(go.Bar(
@@ -145,23 +138,15 @@ fig.add_trace(go.Scatter(
     textposition="top center"
 ))
 
-# Payback marker and label with arrow pointing to correct x position
-if payback_x is not None:
-    fig.add_vline(x=payback_x, line_width=2, line_dash="dot", line_color="yellow")
+if payback_year:
+    fig.add_vline(x=payback_year, line_width=2, line_dash="dot", line_color="yellow")
     fig.add_annotation(
-        x=payback_x,
-        y=max(cumulative) * 1.05,
-        xref="x",
-        yref="y",
-        ax=0,
-        ay=-40,
-        showarrow=True,
-        arrowhead=1,
-        text=f"<b>Payback Period: {payback_x:.2f} yrs</b>",
-        font=dict(color="black", size=14),
-        bgcolor="yellow",
-        bordercolor="black",
-        borderwidth=1
+        x=payback_year, y=1.08,
+        xref="x", yref="paper",
+        text=f"<b>Payback: Year {payback_year:.2f}</b>",
+        showarrow=False,
+        font=dict(color="yellow", size=16),
+        align="center"
     )
 
 fig.update_layout(
@@ -182,7 +167,6 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# Notes
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
@@ -194,4 +178,3 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
-
