@@ -1,16 +1,16 @@
 import streamlit as st
 import plotly.graph_objects as go
 
-# Page setup
+# --- Page config ---
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
-# Currency selection
+# --- Sidebar currency selector ---
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
-currency_symbol = f"$ {selected_currency}"
+currency_symbol = f"{currency_options[selected_currency]} {selected_currency}"
 
-# Country carbon factors (kg CO₂/kWh)
+# --- Carbon factors by country (kg CO₂/kWh) ---
 country_factors = {
     "Indonesia": 0.87, "Singapore": 0.408, "Malaysia": 0.585, "Thailand": 0.513,
     "Vietnam": 0.618, "Philippines": 0.65, "China": 0.555, "Japan": 0.474,
@@ -18,7 +18,7 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-# Input section
+# --- Input Section ---
 st.header("🔧 Input Parameters")
 col1, col2, col3 = st.columns(3)
 
@@ -38,7 +38,7 @@ with col3:
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
     roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
-# --- Final Payback Formula Using Energy Savings Input ---
+# --- Final Calculations ---
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 total_investment = initial_investment + software_fee
@@ -48,34 +48,34 @@ payback_text = (
     if annual_savings > 0 else "Not achievable"
 )
 
-# --- Summary Metrics Display ---
+# --- Summary ---
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
-.summary-metric {{
+.summary-metric {
     display: flex;
     justify-content: space-between;
     gap: 30px;
     margin-top: 10px;
     margin-bottom: 30px;
-}}
-.summary-box {{
+}
+.summary-box {
     background-color: #f9f9f9;
     padding: 14px 20px;
     border-radius: 10px;
     width: 100%;
     text-align: center;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}}
-.summary-value {{
+}
+.summary-value {
     font-size: 20px;
     font-weight: 600;
-}}
-.summary-label {{
+}
+.summary-label {
     font-size: 14px;
     color: #666;
     margin-top: 4px;
-}}
+}
 </style>
 <div class="summary-metric">
     <div class="summary-box">
@@ -102,53 +102,52 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# --- ROI CHART SECTION with Payback Marker (Bottom) ---
+# --- ROI CHART (Stacked with Payback Marker) ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 years = list(range(roi_years))
-annual_savings_list = [annual_savings] * roi_years
-investment_costs = [initial_investment + software_fee] + [software_fee] * (roi_years - 1)
+investment = [initial_investment + software_fee] + [software_fee] * (roi_years - 1)
+savings = [annual_savings] * roi_years
 
-# Cumulative net savings
-cumulative_savings = []
+cumulative_net = []
 net = 0
 for i in range(roi_years):
-    net += (annual_savings_list[i] - investment_costs[i])
-    cumulative_savings.append(net)
+    net += savings[i] - investment[i]
+    cumulative_net.append(net)
 
-# Calculate payback
 payback_year = None
 if annual_savings > 0:
     raw = (initial_investment + software_fee) / annual_savings
     if raw <= roi_years:
         payback_year = round(raw, 2)
 
-# Chart
 fig = go.Figure()
 
 fig.add_trace(go.Bar(
     x=years,
-    y=annual_savings_list,
-    name="Annual Savings",
-    marker_color="green",
-    offsetgroup=0
+    y=investment,
+    name="Investment",
+    marker_color="red",
+    text=[f"{currency_symbol} {int(v):,}" for v in investment],
+    textposition="auto"
 ))
 
 fig.add_trace(go.Bar(
     x=years,
-    y=investment_costs,
-    name="Investment",
-    marker_color="red",
-    offsetgroup=1
+    y=savings,
+    name="Annual Savings",
+    marker_color="green",
+    text=[f"{currency_symbol} {int(v):,}" for v in savings],
+    textposition="auto"
 ))
 
 fig.add_trace(go.Scatter(
     x=years,
-    y=cumulative_savings,
+    y=cumulative_net,
     mode="lines+markers+text",
     name="Cumulative Net Savings",
     line=dict(color="blue"),
-    text=[f"${int(y):,}" for y in cumulative_savings],
+    text=[f"{currency_symbol} {int(v):,}" for v in cumulative_net],
     textposition="top center"
 ))
 
@@ -169,18 +168,18 @@ if payback_year is not None:
     )
 
 fig.update_layout(
-    barmode='group',
+    barmode='stack',
     height=450,
-    xaxis=dict(title='Year', range=[0, roi_years - 1]),
-    yaxis_title=f'Cash Flow ({currency_symbol})',
-    plot_bgcolor='white',
+    xaxis_title="Year",
+    yaxis_title=f"Cash Flow ({currency_symbol})",
+    plot_bgcolor="white",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     margin=dict(l=20, r=20, t=40, b=30)
 )
 
 st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
-# --- Notes ---
+# --- Notes Section ---
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
