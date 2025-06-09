@@ -48,63 +48,7 @@ carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 payback_text = f"{initial_investment / annual_savings:.2f} yrs" if annual_savings > 0 else "Not achievable"
 
-# --- Summary UI ---
-st.markdown("""
-<h3>📊 Summary Metrics</h3>
-<style>
-.summary-metric {{
-    display: flex;
-    justify-content: space-between;
-    gap: 30px;
-    margin-top: 10px;
-    margin-bottom: 30px;
-}}
-.summary-box {{
-    background-color: #f9f9f9;
-    padding: 14px 20px;
-    border-radius: 10px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}}
-.summary-value {{
-    font-size: 20px;
-    font-weight: 600;
-}}
-.summary-label {{
-    font-size: 14px;
-    color: #666;
-    margin-top: 4px;
-}}
-</style>
-<div class="summary-metric">
-    <div class="summary-box">
-        <div class="summary-value">{:.1f} tCO₂e/year</div>
-        <div class="summary-label">Carbon Reduction</div>
-    </div>
-    <div class="summary-box">
-        <div class="summary-value">{:,} kWh/year</div>
-        <div class="summary-label">Energy Savings</div>
-    </div>
-    <div class="summary-box">
-        <div class="summary-value">{:.1f}%</div>
-        <div class="summary-label">Efficiency Improvement</div>
-    </div>
-    <div class="summary-box">
-        <div class="summary-value">{}</div>
-        <div class="summary-label">Payback Period</div>
-    </div>
-</div>
-""".format(
-    carbon_reduction / 1000,
-    int(energy_savings),
-    efficiency_pct * 100,
-    payback_text
-), unsafe_allow_html=True)
-
-# --- ROI CHART ---
-st.subheader(f"💰 {roi_years}-Year ROI Forecast")
-
+# ROI chart inputs
 x_years = list(range(roi_years))
 initials = [initial_investment] + [0]*(roi_years - 1)
 savings = [0] + [annual_savings] * (roi_years - 1)
@@ -114,8 +58,10 @@ net_flows = [s - f - i for s, f, i in zip(savings, fees, initials)]
 cumulative = [net_flows[0]]
 for i in range(1, roi_years):
     cumulative.append(cumulative[-1] + net_flows[i])
+
 payback_year = compute_payback_year(net_flows)
 
+# Plotly chart
 fig = go.Figure()
 
 fig.add_trace(go.Bar(x=x_years, y=[-v for v in initials], name="Initial Investment",
@@ -132,13 +78,23 @@ fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", nam
                          text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
                          textposition="top center"))
 
+# ✅ Add payback line and yellow annotation
 if payback_year:
-    fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="yellow")
-    fig.add_annotation(x=payback_year, y=max(cumulative)*0.05,
-                       text=f"Payback: Year {payback_year:.2f}",
-                       showarrow=False, font=dict(color="yellow", size=14), bgcolor="black")
+    fig.add_vline(x=payback_year, line_width=2, line_dash="dot", line_color="yellow")
+    fig.add_annotation(
+        x=payback_year,
+        y=1.01,  # Just above the plot
+        yref="paper",
+        xref="x",
+        showarrow=False,
+        text=f"Payback: Year {payback_year:.2f}",
+        font=dict(color="yellow", size=14),
+        align="center"
+    )
 
+# Layout settings
 fig.update_layout(
+    title="Cashflow & Savings Timeline",
     barmode="relative",
     height=500,
     plot_bgcolor="white",
@@ -168,5 +124,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
-
 
