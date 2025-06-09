@@ -40,13 +40,13 @@ with col2:
     selected_country = st.selectbox("Select Country", list(country_factors.keys()))
     carbon_emission_factor = st.number_input("Custom CO₂ Factor (kg/kWh)", value=0.82) \
         if selected_country == "Custom" else country_factors[selected_country]
+    roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
     efficiency_pct = st.number_input("Efficiency Improvement (%)", value=5.0, format="%.2f") / 100
 
 with col3:
     initial_investment = st.number_input(f"Initial Investment ({currency_symbol})", value=88817.0)
     one_time_install = st.number_input(f"One-Time Installation ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
-    roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
 # Calculations
 carbon_reduction = energy_savings * carbon_emission_factor
@@ -162,12 +162,15 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# Footer
+# NOTES (final format)
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
-- Savings and payback are indicative only based on current assumptions.
-- Assumes BMS access and standard operating conditions.
-- No additional hardware or engineering costs included.
+- Savings are indicative only and assume 12 months of clean interval energy + HVAC data; we will recalculate once verified data is available.  
+- We assume your BMS offers read/write API access with documented point names and units; exact scope and timeline will be set after we review the point list.  
+- Models use current schedules, set-points and occupancy; any major change (new tenants, longer hours, etc.) will shift both baseline and savings.  
+- Cost and CO₂ figures use prevailing market values.  
+- No new meters, controllers, network upgrades or cybersecurity work are included; any required additions will be separately scoped and priced after a joint site survey.  
 """)
+
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
