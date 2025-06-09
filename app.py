@@ -53,13 +53,60 @@ if annual_savings > software_fee:
 else:
     payback_text = "Not achievable"
 
-# --- Metrics Summary (One Line) ---
-st.markdown("### 📊 Summary Metrics")
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Carbon Reduction", f"{carbon_reduction / 1000:.1f} tCO₂e/year")
-m2.metric("Energy Savings", f"{energy_savings/1000:,.0f}k kWh/year")
-m3.metric("Savings %", f"{savings_pct * 100:.1f}%")
-m4.metric("Payback Period", payback_text)
+# --- Custom Summary Metrics (One Line, No Text Cutoff) ---
+st.markdown("""
+    <h3>📊 Summary Metrics</h3>
+    <style>
+    .summary-metric {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+    .summary-box {
+        background-color: #f9f9f9;
+        padding: 14px 20px;
+        border-radius: 10px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .summary-value {
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .summary-label {
+        font-size: 14px;
+        color: #666;
+        margin-top: 4px;
+    }
+    </style>
+
+    <div class="summary-metric">
+        <div class="summary-box">
+            <div class="summary-value">{:.1f} tCO₂e/year</div>
+            <div class="summary-label">Carbon Reduction</div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-value">{:,} kWh/year</div>
+            <div class="summary-label">Energy Savings</div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-value">{:.1f}%</div>
+            <div class="summary-label">Savings %</div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-value">{}</div>
+            <div class="summary-label">Payback Period</div>
+        </div>
+    </div>
+""".format(
+    carbon_reduction / 1000,
+    int(energy_savings),
+    savings_pct * 100,
+    payback_text
+), unsafe_allow_html=True)
 
 # --- ROI Chart ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
