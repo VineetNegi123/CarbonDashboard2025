@@ -153,7 +153,7 @@ if payback_x is not None:
         y=max(cumulative) * 1.02,
         xref="x",
         yref="y",
-        text=f"<b>Payback: Year {payback_x:.2f}</b>",
+        text=f"<b>Payback Period: {payback_x:.2f} yrs</b>",
         showarrow=False,
         font=dict(color="black", size=14),
         align="center",
