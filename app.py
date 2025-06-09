@@ -12,6 +12,7 @@ def compute_payback_year(cashflows):
 
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
+# Currency and country setup
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
@@ -24,6 +25,7 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
+# Input UI
 st.header("🛠️ Input Parameters")
 col1, col2, col3 = st.columns(3)
 
@@ -44,6 +46,7 @@ with col3:
     one_time_install = st.number_input(f"One-Time Installation ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
 
+# Calculations
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 payback_text = f"{initial_investment / annual_savings:.2f} yrs" if annual_savings > 0 else "Not achievable"
@@ -102,11 +105,13 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# --- ROI CHART ---
+# --- ROI Chart Calculation ---
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
-initials = [initial_investment] + [0]*(roi_years - 1)
+
+# Year-by-year bar logic
+initials = [initial_investment] + [0] * (roi_years - 1)
 savings = [0] + [annual_savings] * (roi_years - 1)
 fees = [0, 0] + [software_fee] * max(0, roi_years - 2)
 
@@ -116,6 +121,7 @@ for i in range(1, roi_years):
     cumulative.append(cumulative[-1] + net_flows[i])
 payback_year = compute_payback_year(net_flows)
 
+# Plotly chart
 fig = go.Figure()
 
 fig.add_trace(go.Bar(x=x_years, y=[-v for v in initials], name="Initial Investment",
@@ -132,24 +138,11 @@ fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", nam
                          text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
                          textposition="top center"))
 
-# ✅ Yellow dotted line and label
 if payback_year:
-    fig.add_vline(
-        x=payback_year,
-        line_width=2,
-        line_dash="dot",
-        line_color="yellow"
-    )
-    fig.add_annotation(
-        x=payback_year,
-        y=1.08,
-        xref="x",
-        yref="paper",
-        text=f"<b>Payback: Year {payback_year:.2f}</b>",
-        showarrow=False,
-        font=dict(color="yellow", size=16),
-        align="center"
-    )
+    fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="orange")
+    fig.add_annotation(x=payback_year, y=max(cumulative)*0.05,
+                       text=f"Payback: Year {payback_year:.2f}",
+                       showarrow=False, font=dict(color="orange", size=14), bgcolor="white")
 
 fig.update_layout(
     barmode="relative",
