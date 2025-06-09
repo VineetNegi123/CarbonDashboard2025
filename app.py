@@ -1,7 +1,6 @@
 import streamlit as st
 import plotly.graph_objects as go
 
-# --- Payback Year Function ---
 def compute_payback_year(cashflows):
     cumulative = 0
     for i in range(1, len(cashflows)):
@@ -11,16 +10,16 @@ def compute_payback_year(cashflows):
             return i - 1 + (-prev) / (cashflows[i])
     return None
 
-# --- Page setup ---
+# Page setup
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
-# --- Sidebar: Currency selection ---
+# Currency selection
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
 st.sidebar.markdown("### 💱 Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
 currency_symbol = f"$ {selected_currency}"
 
-# --- Carbon factors by country ---
+# Carbon factors
 country_factors = {
     "Indonesia": 0.87, "Singapore": 0.408, "Malaysia": 0.585, "Thailand": 0.513,
     "Vietnam": 0.618, "Philippines": 0.65, "China": 0.555, "Japan": 0.474,
@@ -28,8 +27,8 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-# --- Inputs ---
-st.header("🔧 Input Parameters")
+# Input UI
+st.header("🛠️ Input Parameters")
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -44,21 +43,21 @@ with col2:
     efficiency_pct = st.number_input("Efficiency Improvement (%)", value=5.0, format="%.2f") / 100
 
 with col3:
-    one_time_install = st.number_input(f"One-Time Installation Cost ({currency_symbol})", value=16000.0)
+    initial_investment = st.number_input(f"Initial Investment ({currency_symbol})", value=88817.0)
+    one_time_install = st.number_input(f"One-Time Installation ({currency_symbol})", value=16000.0)
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
     roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
-# --- Calculations ---
-total_investment = one_time_install + software_fee
+# Calculations
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 
 payback_text = (
-    f"{total_investment / annual_savings:.2f} yrs"
+    f"{initial_investment / annual_savings:.2f} yrs"
     if annual_savings > 0 else "Not achievable"
 )
 
-# --- Summary Boxes ---
+# Summary Metrics
 st.markdown("""
 <h3>📊 Summary Metrics</h3>
 <style>
@@ -112,70 +111,42 @@ st.markdown("""
     payback_text
 ), unsafe_allow_html=True)
 
-# --- ROI Chart ---
+# ROI CHART
 st.subheader(f"💰 {roi_years}-Year ROI Forecast")
 
 x_years = list(range(roi_years))
-initials = [total_investment] + [0]*(roi_years - 1)
+initials = [initial_investment] + [0]*(roi_years - 1)
 fees = [0] + [software_fee] * (roi_years - 1)
 savings = [annual_savings] * roi_years
 net_flows = [s - f - i for s, f, i in zip(savings, fees, initials)]
 
-# Cumulative net savings
 cumulative = [net_flows[0]]
 for i in range(1, roi_years):
     cumulative.append(cumulative[-1] + net_flows[i])
 
-# Payback year (interpolated)
 payback_year = compute_payback_year(net_flows)
 
-# Plotly chart
 fig = go.Figure()
 
-fig.add_trace(go.Bar(
-    x=x_years,
-    y=[-v for v in initials],
-    name="Initial Investment",
-    marker_color="grey",
-    text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in initials],
-    textposition="outside"
-))
-fig.add_trace(go.Bar(
-    x=x_years,
-    y=savings,
-    name="Annual Savings",
-    marker_color="green",
-    text=[f"{currency_symbol}{int(v):,}" for v in savings],
-    textposition="outside"
-))
-fig.add_trace(go.Bar(
-    x=x_years,
-    y=[-v for v in fees],
-    name="SaaS Fee",
-    marker_color="red",
-    text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in fees],
-    textposition="outside"
-))
-fig.add_trace(go.Scatter(
-    x=x_years,
-    y=cumulative,
-    mode="lines+markers+text",
-    name="Cumulative Net Savings",
-    line=dict(color="blue", width=3),
-    text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
-    textposition="top center"
-))
+fig.add_trace(go.Bar(x=x_years, y=[-v for v in initials], name="Initial Investment",
+                     marker_color="grey", text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in initials],
+                     textposition="outside"))
+fig.add_trace(go.Bar(x=x_years, y=savings, name="Annual Savings",
+                     marker_color="green", text=[f"{currency_symbol}{int(v):,}" for v in savings],
+                     textposition="outside"))
+fig.add_trace(go.Bar(x=x_years, y=[-v for v in fees], name="SaaS Fee",
+                     marker_color="red", text=[f"-{currency_symbol}{int(v):,}" if v else "" for v in fees],
+                     textposition="outside"))
+fig.add_trace(go.Scatter(x=x_years, y=cumulative, mode="lines+markers+text", name="Cumulative Net Savings",
+                         line=dict(color="blue", width=3),
+                         text=[f"{currency_symbol}{int(v):,}" for v in cumulative],
+                         textposition="top center"))
 
-# Add payback year line
 if payback_year:
     fig.add_vline(x=payback_year, line_width=2, line_dash="dash", line_color="orange")
-    fig.add_annotation(
-        x=payback_year, y=max(cumulative) * 0.05,
-        text=f"Payback: Year {payback_year:.2f}",
-        showarrow=False,
-        font=dict(color="orange", size=14),
-        bgcolor="white"
-    )
+    fig.add_annotation(x=payback_year, y=max(cumulative) * 0.05,
+                       text=f"Payback: Year {payback_year:.2f}",
+                       showarrow=False, font=dict(color="orange", size=14), bgcolor="white")
 
 fig.update_layout(
     barmode="relative",
@@ -191,13 +162,12 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# --- Notes ---
+# Footer
 st.markdown("---")
 st.subheader("📝 Notes")
 st.markdown("""
-- Assumes valid metered baseline with standard BMS read/write capability.
-- Forecast excludes additional network, meter, or control upgrade costs.
-- SaaS fees and savings calculated based on current cooling patterns and schedules.
+- Savings and payback are indicative only based on current assumptions.
+- Assumes BMS access and standard operating conditions.
+- No additional hardware or engineering costs included.
 """)
-
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
