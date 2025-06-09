@@ -25,7 +25,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     energy_savings = st.number_input("Estimated Energy Savings (kWh/year)", value=1040249.0)
     electricity_rate = st.number_input(f"Electricity Rate ({currency_symbol}/kWh)", value=0.14)
-    cooling_energy = st.number_input("Cooling Energy (kWh/year)", value=21900000)
+    cooling_energy = st.number_input("Cooling Energy (RTh/year)", value=21900000)
 
 with col2:
     selected_country = st.selectbox("Select Country", list(country_factors.keys()))
@@ -38,7 +38,7 @@ with col3:
     software_fee = st.number_input(f"Annual SaaS Fee ({currency_symbol})", value=72817.0)
     roi_years = st.selectbox("ROI Duration (Years)", options=[3, 5])
 
-# --- Final Payback Formula Using Fixed Energy Savings ---
+# --- Final Payback Formula Using Energy Savings Input ---
 carbon_reduction = energy_savings * carbon_emission_factor
 annual_savings = energy_savings * electricity_rate
 total_investment = initial_investment + software_fee
