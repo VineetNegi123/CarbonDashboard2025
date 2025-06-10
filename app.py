@@ -84,16 +84,54 @@ fig.update_layout(
     yaxis_title=f"Cash Flow ({currency_symbol})"
 )
 
-# Continue with existing summary + footer code unchanged
-# Summary + Footer already in the latest saved version
+# ---------------------- Summary Boxes with Descriptions --------------------------- #
+st.subheader("💰 Summary")
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f"""
+    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+        <h4>🔥 Initial Investment</h4>
+        <h2 style='color:#007aff;'>{currency_symbol}{int(initial_investment):,}</h2>
+        <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+        <h4>⚡ Annual Energy Savings</h4>
+        <h2 style='color:#1ca979;'>{currency_symbol}{int(annual_savings):,}</h2>
+        <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+        <h4>🔢 Payback Period</h4>
+        <h2 style='color:#ffb703;'>{payback_text}</h2>
+        <p style='font-size:13px;'>Time to recover initial investment through savings</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col4:
+    roi_percent = (net_benefit / initial_investment) * 100
+    st.markdown(f"""
+    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+        <h4>📈 {roi_years}-Year ROI</h4>
+        <h2 style='color:#ff6b6b;'>{roi_percent:.0f}%</h2>
+        <p style='font-size:13px;'>Return on investment over the analysis period</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.plotly_chart(fig, use_container_width=True)
 
-total_net_benefit = net_benefit
+# ------------------- Footer Banner ---------------------- #
 st.markdown(f"""
 <div style='background: linear-gradient(90deg, #fd7e14, #f94f4f); padding: 30px; border-radius: 12px; margin-top: 30px; text-align: center;'>
     <h2 style='color: white; margin-bottom: 0;'>Total Net Benefit</h2>
-    <h1 style='color: white; font-size: 48px; margin-top: 5px;'>{currency_symbol}{int(total_net_benefit):,}</h1>
+    <h1 style='color: white; font-size: 48px; margin-top: 5px;'>{currency_symbol}{int(net_benefit):,}</h1>
     <p style='color: white; font-size: 14px;'>Cumulative savings after recovering initial investment over {roi_years} years</p>
 </div>
 """, unsafe_allow_html=True)
