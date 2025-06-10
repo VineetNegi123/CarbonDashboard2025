@@ -83,7 +83,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.markdown(f"""
-    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
         <h4>🔥 Initial Investment</h4>
         <h2 style='color:#4aa7f9;'>{currency_symbol}{int(initial_investment):,}</h2>
         <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
@@ -92,7 +92,7 @@ with col1:
 
 with col2:
     st.markdown(f"""
-    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
         <h4>⚡ Annual Energy Savings</h4>
         <h2 style='color:#60d394;'>{currency_symbol}{int(annual_savings):,}</h2>
         <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
@@ -101,7 +101,7 @@ with col2:
 
 with col3:
     st.markdown(f"""
-    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
         <h4>🔢 Payback Period</h4>
         <h2 style='color:#facc15;'>{payback_text}</h2>
         <p style='font-size:13px;'>Time to recover initial investment through savings</p>
@@ -111,7 +111,7 @@ with col3:
 with col4:
     roi_percent = ((annual_savings * roi_years - software_fee * (roi_years - 1)) - initial_investment) / initial_investment * 100
     st.markdown(f"""
-    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
         <h4>📈 {roi_years}-Year ROI</h4>
         <h2 style='color:#f87171;'>{roi_percent:.0f}%</h2>
         <p style='font-size:13px;'>Return on investment over the analysis period</p>
@@ -131,3 +131,4 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
