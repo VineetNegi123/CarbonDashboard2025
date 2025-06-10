@@ -83,27 +83,27 @@ col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.markdown(f"""
-    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
+    <div style='background-color:#f0f6ff; padding:20px; border-radius:10px; color:#003366;'>
         <h4>🔥 Initial Investment</h4>
-        <h2 style='color:#4aa7f9;'>{currency_symbol}{int(initial_investment):,}</h2>
+        <h2 style='color:#0066cc;'>{currency_symbol}{int(initial_investment):,}</h2>
         <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
     st.markdown(f"""
-    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
+    <div style='background-color:#f0f6ff; padding:20px; border-radius:10px; color:#003366;'>
         <h4>⚡ Annual Energy Savings</h4>
-        <h2 style='color:#60d394;'>{currency_symbol}{int(annual_savings):,}</h2>
+        <h2 style='color:#1ca979;'>{currency_symbol}{int(annual_savings):,}</h2>
         <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
     </div>
     """, unsafe_allow_html=True)
 
 with col3:
     st.markdown(f"""
-    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
+    <div style='background-color:#f0f6ff; padding:20px; border-radius:10px; color:#003366;'>
         <h4>🔢 Payback Period</h4>
-        <h2 style='color:#facc15;'>{payback_text}</h2>
+        <h2 style='color:#ffb703;'>{payback_text}</h2>
         <p style='font-size:13px;'>Time to recover initial investment through savings</p>
     </div>
     """, unsafe_allow_html=True)
@@ -111,9 +111,9 @@ with col3:
 with col4:
     roi_percent = ((annual_savings * roi_years - software_fee * (roi_years - 1)) - initial_investment) / initial_investment * 100
     st.markdown(f"""
-    <div style='background-color:#10375c; padding:20px; border-radius:10px; color:#ffffff;'>
+    <div style='background-color:#f0f6ff; padding:20px; border-radius:10px; color:#003366;'>
         <h4>📈 {roi_years}-Year ROI</h4>
-        <h2 style='color:#f87171;'>{roi_percent:.0f}%</h2>
+        <h2 style='color:#ff6b6b;'>{roi_percent:.0f}%</h2>
         <p style='font-size:13px;'>Return on investment over the analysis period</p>
     </div>
     """, unsafe_allow_html=True)
@@ -131,4 +131,3 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
-
