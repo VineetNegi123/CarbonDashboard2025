@@ -77,30 +77,57 @@ fig.update_layout(
     yaxis_title=f"Cash Flow ({currency_symbol})"
 )
 
-# ---------------------- UI Layout --------------------------- #
+# ---------------------- Summary Boxes with Descriptions --------------------------- #
 st.subheader("💰 Summary")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.metric(label="Initial Investment", value=f"{currency_symbol}{int(initial_investment):,}")
+    st.markdown(f"""
+    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+        <h4>🔥 Initial Investment</h4>
+        <h2 style='color:#4aa7f9;'>{currency_symbol}{int(initial_investment):,}</h2>
+        <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col2:
-    st.metric(label="Annual Energy Savings", value=f"{currency_symbol}{int(annual_savings):,}")
+    st.markdown(f"""
+    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+        <h4>⚡ Annual Energy Savings</h4>
+        <h2 style='color:#60d394;'>{currency_symbol}{int(annual_savings):,}</h2>
+        <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col3:
-    st.metric(label="Payback Period", value=payback_text)
+    st.markdown(f"""
+    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+        <h4>🔢 Payback Period</h4>
+        <h2 style='color:#facc15;'>{payback_text}</h2>
+        <p style='font-size:13px;'>Time to recover initial investment through savings</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 with col4:
     roi_percent = ((annual_savings * roi_years - software_fee * (roi_years - 1)) - initial_investment) / initial_investment * 100
-    st.metric(label=f"{roi_years}-Year ROI", value=f"{roi_percent:.0f}%")
+    st.markdown(f"""
+    <div style='background-color:#1e3a5f; padding:20px; border-radius:10px; color:white;'>
+        <h4>📈 {roi_years}-Year ROI</h4>
+        <h2 style='color:#f87171;'>{roi_percent:.0f}%</h2>
+        <p style='font-size:13px;'>Return on investment over the analysis period</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.plotly_chart(fig, use_container_width=True)
 
 # ------------------- Footer Banner ---------------------- #
 total_net_benefit = annual_savings * roi_years - software_fee * (roi_years - 1) - initial_investment
-st.markdown("""
+st.markdown(f"""
 <div style='background: linear-gradient(90deg, #fd7e14, #f94f4f); padding: 30px; border-radius: 12px; margin-top: 30px; text-align: center;'>
     <h2 style='color: white; margin-bottom: 0;'>Total Net Benefit</h2>
-    <h1 style='color: white; font-size: 48px; margin-top: 5px;'>{}{}{:,}</h1>
-    <p style='color: white; font-size: 14px;'>Cumulative savings after recovering initial investment over {} years</p>
+    <h1 style='color: white; font-size: 48px; margin-top: 5px;'>{currency_symbol}{int(total_net_benefit):,}</h1>
+    <p style='color: white; font-size: 14px;'>Cumulative savings after recovering initial investment over {roi_years} years</p>
 </div>
-""".format(currency_symbol, " ", int(total_net_benefit), roi_years), unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
