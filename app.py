@@ -24,7 +24,7 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-st.header("🛠️ Input Parameters")
+st.header(" Input Parameters")
 col1, col2, col3 = st.columns(3)
 
 with col1:
