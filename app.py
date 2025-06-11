@@ -145,7 +145,7 @@ with col5:
     st.markdown(f"""
     <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Carbon Reduction</h4>
-        <h2 style='color:#007acc;'>{carbon_reduction/1000:.1f} tCO₂e/year</h2>
+        <h2 style='color:#1a1a1a;'>{carbon_reduction/1000:.1f} tCO₂e/year</h2>
         <p style='font-size:13px;'>Estimated annual CO₂ emissions reduction</p>
     </div>
     """, unsafe_allow_html=True)
