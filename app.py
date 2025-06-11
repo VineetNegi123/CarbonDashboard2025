@@ -92,7 +92,7 @@ with col1:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
         <h4> Initial Investment</h4>
-        <h2 style='color:#007aff;'>{currency_symbol}{int(initial_investment):,}</h2>
+        <h2 style='color:#007acc;'>{currency_symbol}{int(initial_investment):,}</h2>
         <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
     </div>
     """, unsafe_allow_html=True)
@@ -101,7 +101,7 @@ with col2:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
         <h4> Annual Energy Savings</h4>
-        <h2 style='color:#1ca979;'>{currency_symbol}{int(annual_savings):,}</h2>
+        <h2 style='color:#007acc;'>{currency_symbol}{int(annual_savings):,}</h2>
         <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
     </div>
     """, unsafe_allow_html=True)
@@ -110,7 +110,7 @@ with col3:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
         <h4> Payback Period</h4>
-        <h2 style='color:#ffb703;'>{payback_text}</h2>
+        <h2 style='color:#007acc;'>{payback_text}</h2>
         <p style='font-size:13px;'>Time to recover initial investment through savings</p>
     </div>
     """, unsafe_allow_html=True)
@@ -120,7 +120,7 @@ with col4:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
         <h4> {roi_years}-Year ROI</h4>
-        <h2 style='color:#ff6b6b;'>{roi_percent:.0f}%</h2>
+        <h2 style='color:#007acc;'>{roi_percent:.0f}%</h2>
         <p style='font-size:13px;'>Return on investment over the analysis period</p>
     </div>
     """, unsafe_allow_html=True)
@@ -129,7 +129,7 @@ with col5:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
         <h4> Carbon Reduction</h4>
-        <h2 style='color:#6a5acd;'>{carbon_reduction/1000:.1f} tCO₂e/year</h2>
+        <h2 style='color:#007acc;'>{carbon_reduction/1000:.1f} tCO₂e/year</h2>
         <p style='font-size:13px;'>Estimated annual CO₂ emissions reduction</p>
     </div>
     """, unsafe_allow_html=True)
