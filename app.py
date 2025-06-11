@@ -163,13 +163,14 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 st.markdown("""
----
+<div style='background-color:#f5f5f5; padding: 30px;'>
 ### Notes
 - Savings are indicative only and assume 12 months of clean interval energy + HVAC data; we will recalculate once verified data is available.  
 - We assume your BMS offers read/write API access with documented point names and units; exact scope and timeline will be set after we review the point list.  
 - Models use current schedules, set-points and occupancy; any major change (new tenants, longer hours, etc.) will shift both baseline and savings.  
 - Cost and CO₂ figures use prevailing market values.  
-- No new meters, controllers, network upgrades or cybersecurity work are included; any required additions will be separately scoped and priced after a joint site survey.
+- No new meters, controllers, network upgrades or cybersecurity work are included; any required additions will be separately scoped and priced after a joint site survey.</div>
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
