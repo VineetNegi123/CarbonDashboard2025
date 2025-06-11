@@ -12,8 +12,24 @@ def compute_payback_year(cashflows):
 
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
+st.markdown("""
+    <style>
+        body {
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+        }
+        .block-container {
+            padding: 1rem 2rem;
+            background-color: #f5f5f5;
+        }
+        h1, h2, h3, h4, h5, h6, p {
+            color: #1a1a1a;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
-st.sidebar.markdown("###  Currency")
+st.sidebar.markdown("### Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
 currency_symbol = f"{currency_options[selected_currency]}"
 
@@ -24,7 +40,7 @@ country_factors = {
     "United Kingdom": 0.233, "Germany": 0.338, "Custom": None
 }
 
-st.header(" Input Parameters")
+st.header("Input Parameters")
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -79,7 +95,7 @@ fig.update_layout(
     margin=dict(t=40, l=20, r=20, b=40),
     plot_bgcolor="#ffffff",
     paper_bgcolor="#ffffff",
-    font=dict(size=14),
+    font=dict(size=14, color="#1a1a1a"),
     title="5-Year ROI Forecast",
     yaxis_title=f"Cash Flow ({currency_symbol})"
 )
@@ -90,7 +106,7 @@ col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     st.markdown(f"""
-    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+    <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Initial Investment</h4>
         <h2 style='color:#007acc;'>{currency_symbol}{int(initial_investment):,}</h2>
         <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
@@ -99,7 +115,7 @@ with col1:
 
 with col2:
     st.markdown(f"""
-    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+    <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Annual Energy Savings</h4>
         <h2 style='color:#007acc;'>{currency_symbol}{int(annual_savings):,}</h2>
         <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
@@ -108,7 +124,7 @@ with col2:
 
 with col3:
     st.markdown(f"""
-    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+    <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Payback Period</h4>
         <h2 style='color:#007acc;'>{payback_text}</h2>
         <p style='font-size:13px;'>Time to recover initial investment through savings</p>
@@ -118,7 +134,7 @@ with col3:
 with col4:
     roi_percent = (net_benefit / initial_investment) * 100
     st.markdown(f"""
-    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+    <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> {roi_years}-Year ROI</h4>
         <h2 style='color:#007acc;'>{roi_percent:.0f}%</h2>
         <p style='font-size:13px;'>Return on investment over the analysis period</p>
@@ -127,7 +143,7 @@ with col4:
 
 with col5:
     st.markdown(f"""
-    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+    <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Carbon Reduction</h4>
         <h2 style='color:#007acc;'>{carbon_reduction/1000:.1f} tCO₂e/year</h2>
         <p style='font-size:13px;'>Estimated annual CO₂ emissions reduction</p>
@@ -147,7 +163,7 @@ st.markdown(f"""
 
 st.markdown("""
 ---
-###  Notes
+### Notes
 - Savings are indicative only and assume 12 months of clean interval energy + HVAC data; we will recalculate once verified data is available.  
 - We assume your BMS offers read/write API access with documented point names and units; exact scope and timeline will be set after we review the point list.  
 - Models use current schedules, set-points and occupancy; any major change (new tenants, longer hours, etc.) will shift both baseline and savings.  
