@@ -126,7 +126,7 @@ with col3:
     st.markdown(f"""
     <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Payback Period</h4>
-        <h2 style='color:#007acc;'>{payback_text}</h2>
+        <h2 style='color:#1a1a1a;'>{payback_text}</h2>
         <p style='font-size:13px;'>Time to recover initial investment through savings</p>
     </div>
     """, unsafe_allow_html=True)
