@@ -80,12 +80,12 @@ fig.update_layout(
     plot_bgcolor="#ffffff",
     paper_bgcolor="#ffffff",
     font=dict(size=14),
-    title="5-Year Financial Impact Waterfall",
+    title="5-Year ROI Forecast",
     yaxis_title=f"Cash Flow ({currency_symbol})"
 )
 
 # ---------------------- Summary Boxes with Descriptions --------------------------- #
-st.subheader("💰 Summary")
+st.subheader("💰 Summary Metrics")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
