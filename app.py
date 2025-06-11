@@ -14,6 +14,7 @@ st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
 st.markdown("""
     <style>
+        header { background-color: #f5f5f5 !important; }
         body {
             background-color: #f5f5f5;
             color: #1a1a1a;
@@ -25,7 +26,7 @@ st.markdown("""
         h1, h2, h3, h4, h5, h6, p {
             color: #1a1a1a;
         }
-    </style>
+</style>
 """, unsafe_allow_html=True)
 
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
