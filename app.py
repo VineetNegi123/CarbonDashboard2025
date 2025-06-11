@@ -136,7 +136,7 @@ with col4:
     st.markdown(f"""
     <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> {roi_years}-Year ROI</h4>
-        <h2 style='color:#007acc;'>{roi_percent:.0f}%</h2>
+        <h2 style='color:#1a1a1a;'>{roi_percent:.0f}%</h2>
         <p style='font-size:13px;'>Return on investment over the analysis period</p>
     </div>
     """, unsafe_allow_html=True)
