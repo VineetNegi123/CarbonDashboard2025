@@ -85,8 +85,8 @@ fig.update_layout(
 )
 
 # ---------------------- Summary Boxes with Descriptions --------------------------- #
-st.subheader(" Summary Metrics")
-col1, col2, col3, col4 = st.columns(4)
+st.subheader("Summary Metrics")
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
     st.markdown(f"""
@@ -125,6 +125,15 @@ with col4:
     </div>
     """, unsafe_allow_html=True)
 
+with col5:
+    st.markdown(f"""
+    <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
+        <h4> Carbon Reduction</h4>
+        <h2 style='color:#6a5acd;'>{carbon_reduction/1000:.1f} tCO₂e/year</h2>
+        <p style='font-size:13px;'>Estimated annual CO₂ emissions reduction</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 st.plotly_chart(fig, use_container_width=True)
 
 # ------------------- Footer Banner ---------------------- #
@@ -147,4 +156,3 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
-
