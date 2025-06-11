@@ -155,10 +155,10 @@ st.plotly_chart(fig, use_container_width=True)
 
 # ------------------- Footer Banner ---------------------- #
 st.markdown(f"""
-<div style='background: linear-gradient(90deg, #fd7e14, #f94f4f); padding: 30px; border-radius: 12px; margin-top: 30px; text-align: center;'>
-    <h2 style='color: white; margin-bottom: 0;'>Total Net Benefit</h2>
-    <h1 style='color: white; font-size: 48px; margin-top: 5px;'>{currency_symbol}{int(net_benefit):,}</h1>
-    <p style='color: white; font-size: 14px;'>Cumulative savings after recovering initial investment over {roi_years} years</p>
+<div style='background-color: #f0f2f5; padding: 30px; border-radius: 12px; margin-top: 30px; text-align: center; color: #1a1a1a;'>
+    <h2 style='margin-bottom: 0;'>Total Net Benefit</h2>
+    <h1 style='font-size: 48px; margin-top: 5px;'>{currency_symbol}{int(net_benefit):,}</h1>
+    <p style='font-size: 14px;'>Cumulative savings after recovering initial investment over {roi_years} years</p>
 </div>
 """, unsafe_allow_html=True)
 
