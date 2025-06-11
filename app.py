@@ -13,7 +13,7 @@ def compute_payback_year(cashflows):
 st.set_page_config(page_title="CO₂ & ROI Dashboard", layout="wide")
 
 currency_options = {"USD": "$", "SGD": "S$", "MYR": "RM", "IDR": "Rp", "HKD": "HK$", "RMB": "¥"}
-st.sidebar.markdown("### 💱 Currency")
+st.sidebar.markdown("###  Currency")
 selected_currency = st.sidebar.selectbox("Select Currency", list(currency_options.keys()), index=1)
 currency_symbol = f"{currency_options[selected_currency]}"
 
@@ -85,13 +85,13 @@ fig.update_layout(
 )
 
 # ---------------------- Summary Boxes with Descriptions --------------------------- #
-st.subheader("💰 Summary Metrics")
+st.subheader(" Summary Metrics")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
-        <h4>🔥 Initial Investment</h4>
+        <h4> Initial Investment</h4>
         <h2 style='color:#007aff;'>{currency_symbol}{int(initial_investment):,}</h2>
         <p style='font-size:13px;'>One-time setup including hardware, software, and installation</p>
     </div>
@@ -100,7 +100,7 @@ with col1:
 with col2:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
-        <h4>⚡ Annual Energy Savings</h4>
+        <h4> Annual Energy Savings</h4>
         <h2 style='color:#1ca979;'>{currency_symbol}{int(annual_savings):,}</h2>
         <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
     </div>
@@ -109,7 +109,7 @@ with col2:
 with col3:
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
-        <h4>🔢 Payback Period</h4>
+        <h4> Payback Period</h4>
         <h2 style='color:#ffb703;'>{payback_text}</h2>
         <p style='font-size:13px;'>Time to recover initial investment through savings</p>
     </div>
@@ -119,7 +119,7 @@ with col4:
     roi_percent = (net_benefit / initial_investment) * 100
     st.markdown(f"""
     <div style='background-color:#eaf4ff; padding:20px; border-radius:10px; color:#002244;'>
-        <h4>📈 {roi_years}-Year ROI</h4>
+        <h4> {roi_years}-Year ROI</h4>
         <h2 style='color:#ff6b6b;'>{roi_percent:.0f}%</h2>
         <p style='font-size:13px;'>Return on investment over the analysis period</p>
     </div>
@@ -138,7 +138,7 @@ st.markdown(f"""
 
 st.markdown("""
 ---
-### 📝 Notes
+###  Notes
 - Savings are indicative only and assume 12 months of clean interval energy + HVAC data; we will recalculate once verified data is available.  
 - We assume your BMS offers read/write API access with documented point names and units; exact scope and timeline will be set after we review the point list.  
 - Models use current schedules, set-points and occupancy; any major change (new tenants, longer hours, etc.) will shift both baseline and savings.  
@@ -147,3 +147,4 @@ st.markdown("""
 """)
 
 st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+
