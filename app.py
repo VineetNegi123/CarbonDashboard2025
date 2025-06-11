@@ -117,7 +117,7 @@ with col2:
     st.markdown(f"""
     <div style='background-color:#f0f2f5; padding:20px; border-radius:10px; color:#1a1a1a;'>
         <h4> Annual Energy Savings</h4>
-        <h2 style='color:#007acc;'>{currency_symbol}{int(annual_savings):,}</h2>
+        <h2 style='color:#1a1a1a;'>{currency_symbol}{int(annual_savings):,}</h2>
         <p style='font-size:13px;'>Recurring yearly savings from optimized HVAC operations</p>
     </div>
     """, unsafe_allow_html=True)
