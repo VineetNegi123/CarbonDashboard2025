@@ -172,4 +172,4 @@ st.markdown("""
 - No new meters, controllers, network upgrades or cybersecurity work are included; any required additions will be separately scoped and priced after a joint site survey.
 """)
 
-st.caption("Crafted by Univers AI • For Proposal Use Only • Powered by Streamlit")
+st.caption("Crafted by Univers AI • For Proposal Use Only)
